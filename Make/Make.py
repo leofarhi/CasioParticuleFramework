@@ -1,5 +1,6 @@
 from Essentials import *
 from BaseDistribution import *
+from BaseIncludes import *
 
 # get the current directory
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -37,6 +38,29 @@ for module in distributions_modules:
 if len(distributions_class) == 0:
     raise Exception("No distributions loaded")
 
+Libs_modules = []
+for dir in os.listdir(JoinPath(base_path,"Libs")):
+    #check if is directory
+    if os.path.isdir(JoinPath(base_path,"Libs",dir)):
+        file = JoinPath(base_path,"Libs",dir,"Includes.py")
+        if os.path.exists(file):
+            #import by path
+            spec = importlib.util.spec_from_file_location(f"..Libs.{dir}.Includes", file)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            Libs_modules.append(module)
+
+Libs = {}
+for module in Libs_modules:
+    #check if module.Includes() is defined
+    if not hasattr(module, "Includes"):
+        raise Exception(f"Module {module.__name__} doesn't have Includes defined")
+    try:
+        instance = module.Includes()
+        Libs[instance.id] = instance
+    except Exception as e:
+        print(f"Error loading {module.__name__}: {e}")
+
 class Make(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -50,6 +74,7 @@ class Make(Tk):
         self.MenuDistributions.pack(side=TOP, fill=X)
         self.MenuDistributions.combobox.bind("<<ComboboxSelected>>", self.DistributionSelected)
 
+        self.Libs = Libs
         self.Distributions = []
 
         self.SaveLoadSystem = SaveLoadSystem()

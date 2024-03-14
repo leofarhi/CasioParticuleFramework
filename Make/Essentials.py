@@ -54,10 +54,13 @@ class SaveLoadSystem:
     
     def Load(self, data):
         for name, obj in self.data.items():
-            if name in data:
-                obj.Load(data[name])
-            else:
-                obj.Load(None)
+            try:
+                if name in data:
+                    obj.Load(data[name])
+                else:
+                    obj.Load(None)
+            except Exception as e:
+                print(f"Error loading {name}: {e}")
 
 class AfterLoadSystem:
     def __init__(self, save_function, load_function):
@@ -125,6 +128,13 @@ def GetAllSubFolders(root):
                 queue.append(os.path.join(folder, file))
     return folders
 
+def GetAllFilesInSubFolders(srcFolder, filetypes = []):
+    listFiles = []
+    for root, dirs, files in os.walk(srcFolder):
+        for file in files:
+            if True in [bool(file.endswith(ext)) for ext in filetypes]:
+                listFiles.append(os.path.join(root, file))
+    return listFiles
 
 #tkinter zone
 

@@ -27,7 +27,7 @@ LIBS_DIR = ../Libs
 #/*</LIBS_DIR_FIELD>*/
 
 #/*<SOURCE_DIR_FIELD>*/
-SourceDirs += ../Sources ../Sources/include ../Sources/src
+SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/Essential/Dict ../Libs/Essential/List ../Libs/Essential/Tuple
 #/*</SOURCE_DIR_FIELD>*/
 
 #print all folder in SourceDirs
@@ -35,6 +35,8 @@ SourceDirs += ../Sources ../Sources/include ../Sources/src
 
 
 SRC = $(foreach folder,$(SourceDirs),$(wildcard $(folder)/*.c))
+#remove duplicate
+SRC := $(sort $(SRC))
 OBJ += ${SRC:.c=.o}
 DEP += ${SRC:.c=.d}
 PRG += ${SRC:.c=}
@@ -45,11 +47,11 @@ include Distributions/Windows/Makefile
 #/*</INCLUDE_MAKEFILE>*/
 
 #/*<CFLAGS_AND_LDLIBS_FIELD>*/
-CFLAGS += -I ../Libs/Essential/List -I ../Libs/Essential/Tuple -I ../Libs/Essential/Dict 
+CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple 
 
-CFLAGS += -DDIST_WINDOWS
+CFLAGS += -DDIST_WINDOWS -DSIMU_DIST_LINUX
 
-LDLIBS += -L ../Libs/Essential/List -L ../Libs/Essential/Tuple -L ../Libs/Essential/Dict 
+LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple 
 #/*</CFLAGS_AND_LDLIBS_FIELD>*/
 
 #/*<DEBUG_FIELD>*/

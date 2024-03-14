@@ -1,9 +1,11 @@
 from Essentials import *
 from BaseMakefile import *
+from BaseIncludes import *
 
 
 class BaseDistribution(Frame):
     NAME = "Base Distribution"
+    DEFINE = "DIST_BASE"
     def __init__(self, Make, MainFrame):
         Frame.__init__(self, MainFrame)
         self.Make = Make
@@ -22,6 +24,7 @@ class BaseDistribution(Frame):
         self.tabs.pack(side=TOP, fill=BOTH, expand=1)
 
         self.OnAddGeneralTab()
+        self.OnAddLibsTab()
         self.OnAddMakeTab()
         self.OnAddBottomButton()
         self.OnAddAssetsTab()
@@ -68,16 +71,32 @@ class BaseDistribution(Frame):
         self.TabAssets.tabs.Textures.DirectoryFile = MyDirectoryFile(self.TabAssets.tabs.Textures, filetypes=[".png",".jpg",".jpeg",".bmp"])
         self.TabAssets.tabs.Textures.DirectoryFile.pack(side=TOP, fill=BOTH, expand=1)
         self.SaveLoadSystem.Add("Assets.Textures", self.TabAssets.tabs.Textures.DirectoryFile)
+
+    def OnAddLibsTab(self):
+        self.TabLibs = self.AddTab("Libs")
+        self.TabLibs.Libs = MyIncludesFrame(self.TabLibs, self)
+        self.TabLibs.Libs.pack(side=TOP, fill=BOTH, expand=1)
+        self.TabLibs.Libs.Update()
+        self.SaveLoadSystem.Add("Libs", self.TabLibs.Libs)
+
+    def GetIncludesDir(self):
+        return self.TabLibs.Libs.GetIncludesDir()
     
     def OnAddBottomButton(self):
         self.AddBottomButton("Run", self.Run)
         self.AddBottomButton("Clean", self.Clean)
         self.AddBottomButton("Build", self.Build)
 
+    def OnCloneMakefile(self, clone):
+        return clone
+
     def OnMake(self):
         clone = self.Makefile.Clone()
         clone.TITLE = self.SaveLoadSystem.Get("General.AppName").get()
         clone.DEBUG = bool(self.SaveLoadSystem.Get("General.DebugVersion").get())
+        clone.libs += self.GetIncludesDir()
+        clone.sources += self.GetIncludesDir()
+        clone = self.OnCloneMakefile(clone)
         clone.Write()
         clone.MakeFolders()
 

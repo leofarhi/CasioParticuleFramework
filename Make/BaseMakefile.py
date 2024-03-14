@@ -5,7 +5,7 @@ class Makefile:
         self.filename = filename
         self.includesMakefile = []
         self.sources = []
-        self.libs = ["Libs/Essential/List","Libs/Essential/Tuple","Libs/Essential/Dict"]
+        self.libs = []
         self.defines = []
 
         self.LDLIBS = ""
@@ -55,7 +55,7 @@ class Makefile:
         ReplaceLinesInFile(self.filename, "CFLAGS_AND_LDLIBS_FIELD", CFLAGS + LDLIBS)
 
     def Clone(self):
-        clone = Makefile(self.filename)
+        clone = type(self)(self.filename)
         #get all the attributes
         for attr in dir(self):
             if not attr.startswith("__") and not callable(getattr(self, attr)):
