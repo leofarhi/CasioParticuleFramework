@@ -34,11 +34,18 @@ class Makefile:
         ReplaceLinesInFile(self.filename, "OUTPUT_FIELD", "\nOUTPUT = " + normalize_path(self.OUTPUT) + "\n")
         ReplaceLinesInFile(self.filename, "BUILD_FIELD", "\nBUILD = " + normalize_path(self.BUILD) + "\n")
         ReplaceLinesInFile(self.filename, "LIBS_DIR_FIELD", "\nLIBS_DIR = " + normalize_path(self.LibsDir) + "\n")
+        sources_dir = []
         sources = []
         for source in self.sources:
-            sources += GetAllSubFolders(source)
-        sources = [normalize_path(os.path.relpath(s, os.path.dirname(self.filename))) for s in sources]
-        SourceDirs = "\nSourceDirs += "+ " ".join(sources) + "\n"
+            #check if is a directory
+            if os.path.isdir(source):
+                sources_dir += GetAllSubFolders(source)
+            else:
+                sources.append(normalize_path(os.path.relpath(source, os.path.dirname(self.filename))))
+        sources_dir = [normalize_path(os.path.relpath(s, os.path.dirname(self.filename))) for s in sources_dir]
+        SourceDirs = "\nSourceDirs += "+ " ".join(sources_dir) + "\n"
+        if len(sources) > 0:
+            SourceDirs += "SRC += " + " ".join(sources) + "\n"
         ReplaceLinesInFile(self.filename, "SOURCE_DIR_FIELD", SourceDirs)
         if self.DEBUG:
             ReplaceLinesInFile(self.filename, "DEBUG_FIELD", "\nCFLAGS += -DDEBUG_MODE\n")

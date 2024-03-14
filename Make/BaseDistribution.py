@@ -99,6 +99,7 @@ class BaseDistribution(Frame):
         clone = self.OnCloneMakefile(clone)
         clone.Write()
         clone.MakeFolders()
+        self.TabLibs.Libs.OnBuild()
 
     def OnClean(self):
         pass

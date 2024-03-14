@@ -34,7 +34,7 @@ SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/Essential/Dic
 #$(info $(SourceDirs))
 
 
-SRC = $(foreach folder,$(SourceDirs),$(wildcard $(folder)/*.c))
+SRC += $(foreach folder,$(SourceDirs),$(wildcard $(folder)/*.c))
 #remove duplicate
 SRC := $(sort $(SRC))
 OBJ += ${SRC:.c=.o}
@@ -49,7 +49,7 @@ include Distributions/Windows/Makefile
 #/*<CFLAGS_AND_LDLIBS_FIELD>*/
 CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple 
 
-CFLAGS += -DDIST_WINDOWS -DSIMU_DIST_LINUX
+CFLAGS += -DDIST_WINDOWS
 
 LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple 
 #/*</CFLAGS_AND_LDLIBS_FIELD>*/

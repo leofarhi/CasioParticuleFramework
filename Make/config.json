@@ -12,6 +12,11 @@
                         "Selection.Dict": true,
                         "Selection.List": false,
                         "Selection.Tuple": false
+                    },
+                    "Libs/ParticuleEngine": {
+                        "Check": false,
+                        "Selection.include": false,
+                        "Selection.src": false
                     }
                 },
                 "Make.MakeCmd": "wsl -e bash -lic \"fxsdk build-cg -c -B $(BUILD);make -C $(BUILD)\"",
@@ -59,6 +64,11 @@
                         "Selection.Dict": false,
                         "Selection.List": false,
                         "Selection.Tuple": false
+                    },
+                    "Libs/ParticuleEngine": {
+                        "Check": false,
+                        "Selection.include": false,
+                        "Selection.src": false
                     }
                 },
                 "Make.RunCmd": "wsl -e bash -lic \"./$(General.AppName)\"",
@@ -99,6 +109,11 @@
                         "Selection.Dict": true,
                         "Selection.List": true,
                         "Selection.Tuple": true
+                    },
+                    "Libs/ParticuleEngine": {
+                        "Check": false,
+                        "Selection.include": false,
+                        "Selection.src": false
                     }
                 },
                 "Make.RunCmd": "$(General.AppName).exe",

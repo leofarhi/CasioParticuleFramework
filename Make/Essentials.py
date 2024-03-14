@@ -18,7 +18,12 @@ import subprocess
 from PIL import Image
 from functools import partial
 
+def JoinPath(*args):
+    return os.path.join(*args)
+
 base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+build_path = JoinPath(base_path, "Build","build")
+bin_path = JoinPath(base_path, "Build","bin")
 
 def CreateDir(path):
     if not os.path.exists(path):
@@ -79,13 +84,17 @@ class AfterLoadSystem:
         if self.dataLoaded is not None:
             self.load_function(self.dataLoaded)
 
-def JoinPath(*args):
-    return os.path.join(*args)
+class FindInFileObject:
+    def __init__(self, filename = "", readAll = "", content = "", start = 0, end = 0, sep_length = 0):
+        self.filename = filename
+        self.readAll = readAll
+        self.content = content
+        self.start = start
+        self.end = end
+        self.sep_length = sep_length
 
-
-
-def ReplaceLinesInFile(filename, varName, line):
-    #add line in file between #/*<VAR>*/ and #/*</VAR>*/ with varName
+def FindInFile(filename, varName):
+    #find var in file between #/*<VAR>*/ and #/*</VAR>*/
     Text = ""
     with open(filename, "r") as f:
         Text = f.read()
@@ -98,12 +107,38 @@ def ReplaceLinesInFile(filename, varName, line):
         end = Text.find("//*</" + varName + ">*/")
     if start == -1 or end == -1:
         print("Error: could not find var " + varName + " in " + filename)
+        return None
+    #return object with all data
+    return FindInFileObject(filename, Text, Text[start + LEN:end], start + LEN, end, LEN)
+
+def ReplaceLinesInFile(filename, varName, line):
+    obj = FindInFile(filename, varName)
+    if obj is None:
         return
     #add line to text but dont remove start and end
-    Text = Text[:start + LEN] + line + Text[end:]
+    Text = obj.readAll[:obj.start] + line + obj.readAll[obj.end:]
     #write text to file
     with open(filename, "w") as f:
         f.write(Text)
+
+def GetLinesInFile(filename, varName):
+    obj = FindInFile(filename, varName)
+    if obj is None:
+        return None
+    return obj.content
+
+def AddLinesInFile(filename, varName, line, OnTop = False):
+    obj = FindInFile(filename, varName)
+    if obj is None:
+        return
+    if OnTop:
+        Text = obj.readAll[:obj.start] + line + obj.content + obj.readAll[obj.end:]
+    else:
+        Text = obj.readAll[:obj.end] + line + obj.readAll[obj.end:]
+    #write text to file
+    with open(filename, "w") as f:
+        f.write(Text)
+
 
 def merge_directories(source_dir, destination_dir):
     for item in os.listdir(source_dir):

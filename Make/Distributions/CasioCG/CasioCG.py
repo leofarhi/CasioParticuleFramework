@@ -11,11 +11,13 @@ class CasioMakefile(Makefile):
         ReplaceLinesInFile(self.filename, "DIR_OUT_FIELD", "\nset(DIR_OUT \"" + normalize_path(self.OUTPUT) + "\")\n")
         ReplaceLinesInFile(self.filename, "LIBS_DIR_FIELD", "\nset(LIBS_DIR \"" + normalize_path(self.LibsDir) + "\")\n")
         ReplaceLinesInFile(self.filename, "ASSETS_DIR_FIELD", "\nset(ASSETS_DIR \"" + normalize_path(self.ASSETS) + "\")\n")
+        search = self.libs+self.sources
         sources = []
-        for source in self.libs:
-            sources += GetAllFilesInSubFolders(source, filetypes=[".c",".cpp",".h",".hpp"])
-        for source in self.sources:
-            sources += GetAllFilesInSubFolders(source, filetypes=[".c",".cpp",".h",".hpp"])
+        for source in search:
+            if os.path.isdir(source):
+                sources += GetAllFilesInSubFolders(source, filetypes=[".c",".cpp",".h",".hpp"])
+            else:
+                sources.append(source)
         #remove duplicates
         sources = list(set(sources))
         sources = [normalize_path(os.path.relpath(s, os.path.dirname(self.filename))) for s in sources]

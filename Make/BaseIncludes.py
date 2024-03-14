@@ -15,6 +15,9 @@ class MyIncludesFrameNode(LabelFrame):
 
     def GetIncludesDir(self):
         return self.includes.GetIncludesDir(self, self.distribution)
+    
+    def OnBuild(self):
+        self.includes.OnBuild(self, self.distribution)
 
     def IsChecked(self):
         return bool(self.check.get())
@@ -58,6 +61,12 @@ class MyIncludesFrame(MyScrollFrame):
                 includes += libframe.GetIncludesDir()
         return includes
     
+    def OnBuild(self):
+        for libframe in self.Frames:
+            if libframe.IsChecked():
+                libframe.OnBuild()
+    
+    
     def Save(self):
         data = {}
         for frame in self.Frames:
@@ -81,6 +90,9 @@ class BaseIncludes:
 
     def Frame(self, root, distribution,*args, **kwargs):
         return MyIncludesFrameNode(root, distribution, self, *args, **kwargs)
+    
+    def OnBuild(self, node, distribution):
+        pass
 
     def GetDependencies(self):
         return []
