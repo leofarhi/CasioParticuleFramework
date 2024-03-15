@@ -10,13 +10,12 @@
                     "Libs/Essential": {
                         "Check": true,
                         "Selection.Dict": true,
-                        "Selection.List": false,
-                        "Selection.Tuple": false
+                        "Selection.List": true,
+                        "Selection.Tuple": true
                     },
                     "Libs/ParticuleEngine": {
                         "Check": false,
-                        "Selection.include": false,
-                        "Selection.src": false
+                        "Selection.<built-in function dir>": false
                     }
                 },
                 "Make.MakeCmd": "wsl -e bash -lic \"fxsdk build-cg -c -B $(BUILD);make -C $(BUILD)\"",
@@ -53,27 +52,26 @@
     "Linux": {
         "Datas": {
             "default": {
-                "General.DebugVersion": false,
+                "General.DebugVersion": true,
                 "General.AppName": "Engine",
                 "General.AppVersion": "",
                 "General.AppAuthor": "",
                 "TabGeneral.Simulator": "",
                 "Libs": {
                     "Libs/Essential": {
-                        "Check": false,
-                        "Selection.Dict": false,
-                        "Selection.List": false,
-                        "Selection.Tuple": false
+                        "Check": true,
+                        "Selection.Dict": true,
+                        "Selection.List": true,
+                        "Selection.Tuple": true
                     },
                     "Libs/ParticuleEngine": {
-                        "Check": false,
-                        "Selection.include": false,
-                        "Selection.src": false
+                        "Check": true,
+                        "Selection.<built-in function dir>": true
                     }
                 },
-                "Make.RunCmd": "wsl -e bash -lic \"./$(General.AppName)\"",
+                "Make.RunCmd": "wsl \"./$(General.AppName)\"",
                 "Make.CleanCmd": "make clean",
-                "Make.MakeCmd": "wsl -e bash -lic \"make\"",
+                "Make.MakeCmd": "wsl \"make\"",
                 "Assets.Textures": {
                     "path": "",
                     "files": [
@@ -111,9 +109,8 @@
                         "Selection.Tuple": true
                     },
                     "Libs/ParticuleEngine": {
-                        "Check": false,
-                        "Selection.include": false,
-                        "Selection.src": false
+                        "Check": true,
+                        "Selection.<built-in function dir>": true
                     }
                 },
                 "Make.RunCmd": "$(General.AppName).exe",

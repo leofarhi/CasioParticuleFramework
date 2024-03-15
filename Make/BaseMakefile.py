@@ -40,7 +40,7 @@ class Makefile:
             #check if is a directory
             if os.path.isdir(source):
                 sources_dir += GetAllSubFolders(source)
-            else:
+            elif os.path.isfile(source):
                 sources.append(normalize_path(os.path.relpath(source, os.path.dirname(self.filename))))
         sources_dir = [normalize_path(os.path.relpath(s, os.path.dirname(self.filename))) for s in sources_dir]
         SourceDirs = "\nSourceDirs += "+ " ".join(sources_dir) + "\n"

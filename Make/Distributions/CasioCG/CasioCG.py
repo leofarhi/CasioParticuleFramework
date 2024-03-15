@@ -16,7 +16,7 @@ class CasioMakefile(Makefile):
         for source in search:
             if os.path.isdir(source):
                 sources += GetAllFilesInSubFolders(source, filetypes=[".c",".cpp",".h",".hpp"])
-            else:
+            elif os.path.isfile(source):
                 sources.append(source)
         #remove duplicates
         sources = list(set(sources))

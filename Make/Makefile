@@ -4,7 +4,7 @@ CC = gcc
 #/*</COMPILATOR_FIELD>*/
 
 CPPFLAGS = -MMD
-CFLAGS = #-Wall -Wextra #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror# -fsanitize=address -g3 -std=c99 -O0
 LDFLAGS = -fsanitize=address
 LDLIBS = -lm
 
@@ -27,7 +27,7 @@ LIBS_DIR = ../Libs
 #/*</LIBS_DIR_FIELD>*/
 
 #/*<SOURCE_DIR_FIELD>*/
-SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/Essential/Dict ../Libs/Essential/List ../Libs/Essential/Tuple
+SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/Essential/Dict ../Libs/Essential/List ../Libs/Essential/Tuple ../Libs/ParticuleEngine/WindowsLinux/essential ../Libs/ParticuleEngine/All/include/essential ../Libs/ParticuleEngine/All/src/essential
 #/*</SOURCE_DIR_FIELD>*/
 
 #print all folder in SourceDirs
@@ -47,11 +47,11 @@ include Distributions/Windows/Makefile
 #/*</INCLUDE_MAKEFILE>*/
 
 #/*<CFLAGS_AND_LDLIBS_FIELD>*/
-CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple 
+CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple -I ../Libs/ParticuleEngine/WindowsLinux/essential -I ../Libs/ParticuleEngine/All/include/essential -I ../Libs/ParticuleEngine/All/src/essential 
 
 CFLAGS += -DDIST_WINDOWS
 
-LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple 
+LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple -L ../Libs/ParticuleEngine/WindowsLinux/essential -L ../Libs/ParticuleEngine/All/include/essential -L ../Libs/ParticuleEngine/All/src/essential 
 #/*</CFLAGS_AND_LDLIBS_FIELD>*/
 
 #/*<DEBUG_FIELD>*/

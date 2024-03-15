@@ -16,13 +16,15 @@ find_package(Gint 2.1 REQUIRED)
 
 set(SOURCES
   #/*<SRC>*/
-    ../../../Sources/src/main.c
     ../../../Libs/DistributionCases/CASIO/MyKeyboard.c
+    ../../../Libs/Essential/Dict/Dict.h
+    ../../../Libs/Essential/List/List.c
+    ../../../Sources/src/main.c
     ../../../Libs/DistributionCases/CASIO/MyKeyboard.h
+    ../../../Libs/Essential/Tuple/Tuple.c
     ../../../Libs/Essential/Dict/Dict.c
-    ../../../Libs/Essential/Dict/Dict.h
-    ../../../Libs/Essential/Dict/Dict.c
-    ../../../Libs/Essential/Dict/Dict.h
+    ../../../Libs/Essential/Tuple/Tuple.h
+    ../../../Libs/Essential/List/List.h
 #/*</SRC>*/
 )
 # Shared assets, fx-9860G-only assets and fx-CG-50-only assets
@@ -45,6 +47,10 @@ set(LIBS_DIR "../../../Libs")
 #/*<LIBS>*/
 include_directories("../../../Libs/Essential/Dict")
 link_directories("../../../Libs/Essential/Dict")
+include_directories("../../../Libs/Essential/List")
+link_directories("../../../Libs/Essential/List")
+include_directories("../../../Libs/Essential/Tuple")
+link_directories("../../../Libs/Essential/Tuple")
 #/*</LIBS>*/
 
 include_directories("${LIBS_DIR}/CASIO")

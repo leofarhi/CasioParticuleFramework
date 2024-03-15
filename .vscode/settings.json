@@ -1,5 +1,14 @@
 {
     "files.associations": {
-        "stdio.h": "c"
-    }
+        "stdio.h": "c",
+        "particuleengineessential.h": "c",
+        "stdlib.h": "c",
+        "particuleenginegraphic.h": "c",
+        "sdl.h": "c",
+        "sdl_ttf.h": "c",
+        "particuleenginegraphicoverwrited.h": "c",
+        "sdl_image.h": "c",
+        "math.h": "c",
+        "particuleengineoverwrited.h": "c"
+    },
 }
