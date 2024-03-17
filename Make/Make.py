@@ -61,6 +61,19 @@ for module in Libs_modules:
     except Exception as e:
         print(f"Error loading {module.__name__}: {e}")
 
+Plugins = {}
+plugins_path = JoinPath(current_directory,"Plugins")
+for dir in os.listdir(plugins_path):
+    #check if is directory
+    if os.path.isdir(JoinPath(plugins_path,dir)):
+        file = JoinPath(plugins_path,dir,"Plugin.py")
+        if os.path.exists(file):
+            #import by path
+            spec = importlib.util.spec_from_file_location(f"Plugins.{dir}.Plugin", file)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            Plugins[dir] = module
+
 class Make(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -75,6 +88,7 @@ class Make(Tk):
         self.MenuDistributions.combobox.bind("<<ComboboxSelected>>", self.DistributionSelected)
 
         self.Libs = Libs
+        self.Plugins = Plugins
         self.Distributions = []
 
         self.SaveLoadSystem = SaveLoadSystem()

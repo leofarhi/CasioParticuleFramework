@@ -21,12 +21,20 @@ class WindowsDistribution(BaseDistribution):
 
     def OnCloneMakefile(self, clone):
         for dist in self.Make.Distributions:
-            if dist.NAME in ["Windows", "Linux"]:
+            if dist.NAME not in ["Windows", "Linux"]:
                 if self.TabGeneral.Simulator.get() == dist.NAME:
                     define = "SIMU_"+dist.DEFINE
                     print("Simulator", dist.NAME, define)
                     clone.defines.append(define)
         return clone
+    
+    def OnAddAssetsTab(self):
+        BaseDistribution.OnAddAssetsTab(self)
+        self.AddAssetsSubtab("Fonts", filetypes=[".ttf"], default_path="Fonts")
+
+    def OnMakeAssets(self):
+        AllAssets = BaseDistribution.OnMakeAssets(self)
+        self.CopyAssetsInBuild(AllAssets,"Fonts")
     
     def AfterLoad(self):
         simulator_values = [i.NAME for i in self.Make.Distributions]

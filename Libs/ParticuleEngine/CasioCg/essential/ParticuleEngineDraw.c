@@ -7,6 +7,7 @@ PC_Color PC_ColorCreate(unsigned char r, unsigned char g, unsigned char b, unsig
     color.g = g;
     color.b = b;
     color.a = a;
+    color.color = ((r & 0xf8) << 8) | ((g & 0xfc) << 3) | ((b & 0xf8) >> 3);
     return color;
 }
 
@@ -19,30 +20,31 @@ bool PC_ColorEqual(PC_Color color1, PC_Color color2)
 
 void PC_DrawPixel(int x, int y, PC_Color color)
 {
-    SDL_SetRenderDrawColor(__sdl_renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawPoint(__sdl_renderer, x, y);
+    dpixel(x, y, color.color);
 }
 
 void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color)
 {
-    SDL_SetRenderDrawColor(__sdl_renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(__sdl_renderer, x1, y1, x2, y2);
+    dline(x1, y1, x2, y2, color.color);
 }
 
 void PC_DrawRect(int x, int y, int w, int h, PC_Color color)
 {
     if (w <= 0 || h <= 0)
         return;
-    SDL_SetRenderDrawColor(__sdl_renderer, color.r, color.g, color.b, color.a);
-    SDL_Rect rect = {x, y, w, h};
-    SDL_RenderDrawRect(__sdl_renderer, &rect);
+    w--;
+    h--;
+    dline(x, y, x + w, y, color.color);
+    dline(x + w, y, x + w, y + h, color.color);
+    dline(x, y + h, x, y, color.color);
+    dline(x, y + h, x + w, y + h, color.color);
 }
 
 void PC_DrawFilledRect(int x, int y, int w, int h, PC_Color color)
 {
     if (w <= 0 || h <= 0)
         return;
-    SDL_SetRenderDrawColor(__sdl_renderer, color.r, color.g, color.b, color.a);
-    SDL_Rect rect = {x, y, w, h};
-    SDL_RenderFillRect(__sdl_renderer, &rect);
+    w--;
+    h--;
+    drect(x, y, x + w, y + h, color.color);
 }

@@ -1,6 +1,7 @@
 #ifndef PARTICULE_ENGINE_DRAW_H
 #define PARTICULE_ENGINE_DRAW_H
 #include "ParticuleEngineGraphic.h"
+#include "ParticuleEngineEssential.h"
 
 #ifndef OVERWRITE_STRUCT_COLOR
 typedef struct PC_Color
@@ -17,7 +18,7 @@ PC_Color PC_ColorCreate(unsigned char r, unsigned char g, unsigned char b, unsig
 bool PC_ColorEqual(PC_Color color1, PC_Color color2);
 //returns true if the two colors are equal, false otherwise
 
-void PC_DrawPoint(int x, int y, PC_Color color);
+void PC_DrawPixel(int x, int y, PC_Color color);
 //Draw a point on the screen at (x, y) with the given color
 
 void PC_DrawLine(int x1, int y1, int x2, int y2, PC_Color color);

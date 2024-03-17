@@ -49,7 +49,7 @@ include Distributions/Windows/Makefile
 #/*<CFLAGS_AND_LDLIBS_FIELD>*/
 CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple -I ../Libs/ParticuleEngine/WindowsLinux/essential -I ../Libs/ParticuleEngine/All/include/essential -I ../Libs/ParticuleEngine/All/src/essential 
 
-CFLAGS += -DDIST_WINDOWS
+CFLAGS += -DDIST_WINDOWS -DPROJECT_NAME=Engine -DSIMU_DIST_CASIO_CG
 
 LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple -L ../Libs/ParticuleEngine/WindowsLinux/essential -L ../Libs/ParticuleEngine/All/include/essential -L ../Libs/ParticuleEngine/All/src/essential 
 #/*</CFLAGS_AND_LDLIBS_FIELD>*/

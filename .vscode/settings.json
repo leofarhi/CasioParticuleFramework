@@ -9,6 +9,15 @@
         "particuleenginegraphicoverwrited.h": "c",
         "sdl_image.h": "c",
         "math.h": "c",
-        "particuleengineoverwrited.h": "c"
+        "particuleengineoverwrited.h": "c",
+        "particuleenginetexture.h": "c",
+        "particuleenginefont.h": "c",
+        "vector": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "mykeyboard.h": "c",
+        "string.h": "c",
+        "list.h": "c",
+        "particuleengine.h": "c"
     },
 }

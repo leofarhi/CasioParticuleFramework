@@ -27,36 +27,13 @@ PC_Texture* PC_LoadTexture(const char* path)
     return texture;
 }
 
-PC_Texture* PC_LoadSubTextureSize(const char* path, int sx, int sy, int sw, int sh)
+PC_Texture* PC_CreateTexture(int width, int height)
 {
-    PC_Texture* texture = PC_LoadTexture(path);
-    if (texture == NULL)
-        return NULL;
-    SDL_Surface* surface = texture->surface;
-    SDL_Surface* subSurface = SDL_CreateRGBSurfaceWithFormat(0, sw, sh, surface->format->BitsPerPixel, surface->format->format);
-    if (subSurface == NULL) {
-        printf("Erreur lors de la création de la sous-surface : %s\n", SDL_GetError());
-        return NULL;
-    }
-
-    // Copie de la sous-surface avec conservation du canal alpha
-    SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
-    SDL_SetSurfaceBlendMode(subSurface, SDL_BLENDMODE_BLEND);
-    SDL_Rect srcRect = {sx, sy, sw, sh};
-    SDL_BlitSurface(surface, &srcRect, subSurface, NULL);
-    //Free last texture
-    SDL_DestroyTexture(texture->texture);
-    //Free last surface
-    SDL_FreeSurface(texture->surface);
-    texture->surface = subSurface;
-
-
-    // Création de la texture
-    texture->texture = SDL_CreateTextureFromSurface(__sdl_renderer, subSurface);
-    if (texture->texture == NULL)
-        errx(EXIT_FAILURE, "error SDL_CreateTextureFromSurface %s", SDL_GetError());
-    texture->width = subSurface->w;
-    texture->height = subSurface->h;
+    PC_Texture* texture = malloc(sizeof(PC_Texture));
+    texture->texture = SDL_CreateTexture(__sdl_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    texture->width = width;
+    texture->height = height;
+    texture->surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
     return texture;
 }
 
@@ -75,6 +52,10 @@ void PC_DrawTexture(PC_Texture* texture, int x, int y)
 
 void PC_DrawSubTexture(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh)
 {
+    if (sx + sw > texture->width)
+        sw = texture->width - sx;
+    if (sy + sh > texture->height)
+        sh = texture->height - sy;
     SDL_Rect rect = {x, y, sw, sh};
     SDL_Rect rect2 = {sx, sy, sw, sh};
     SDL_RenderCopy(__sdl_renderer, texture->texture, &rect2, &rect);
@@ -87,9 +68,6 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
         PC_DrawSubTexture(texture, x, y, sx, sy, sw, sh);
         return;
     }
-    SDL_Rect rect = { x, y, abs(w), abs(h) };
-    SDL_Rect rect2 = { sx, sy, sw, sh };
-
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     if (w < 0) {
         flip |= SDL_FLIP_HORIZONTAL;
@@ -97,15 +75,28 @@ void PC_DrawSubTextureSize(PC_Texture* texture, int x, int y, int sx, int sy, in
     if (h < 0) {
         flip |= SDL_FLIP_VERTICAL;
     }
+    w = abs(w);
+    h = abs(h);
+    if (sx + sw > texture->width && w > 0)
+    {
+        float ratio = (float)w / sw;
+        sw = texture->width - sx;
+        w = sw * ratio;
+    }
+    if (sy + sh > texture->height && h > 0)
+    {
+        float ratio = (float)h / sh;
+        sh = texture->height - sy;
+        h = sh * ratio;
+    }
+    SDL_Rect rect = { x, y, w, h };
+    SDL_Rect rect2 = { sx, sy, sw, sh };
 
     SDL_RenderCopyEx(__sdl_renderer, texture->texture, &rect2, &rect, 0, NULL, flip);
 }
 
 void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int sy, int sw, int sh, int w, int h, PC_Color color)
 {
-    SDL_Rect rect = { x, y, abs(w), abs(h) };
-    SDL_Rect rect2 = { sx, sy, sw, sh };
-
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     if (w < 0) {
         flip |= SDL_FLIP_HORIZONTAL;
@@ -113,6 +104,22 @@ void PC_DrawSubTextureSizeColored(PC_Texture* texture, int x, int y, int sx, int
     if (h < 0) {
         flip |= SDL_FLIP_VERTICAL;
     }
+    w = abs(w);
+    h = abs(h);
+    if (sx + sw > texture->width && sw > 0)
+    {
+        float ratio = (float)w / sw;
+        sw = texture->width - sx;
+        w = sw * ratio;
+    }
+    if (sy + sh > texture->height && sh > 0)
+    {
+        float ratio = (float)h / sh;
+        sh = texture->height - sy;
+        h = sh * ratio;
+    }
+    SDL_Rect rect = { x, y, w, h };
+    SDL_Rect rect2 = { sx, sy, sw, sh };
     SDL_SetTextureColorMod(texture->texture, color.r, color.g, color.b);
     SDL_RenderCopyEx(__sdl_renderer, texture->texture, &rect2, &rect, 0, NULL, flip);
     SDL_SetTextureColorMod(texture->texture, 255, 255, 255);

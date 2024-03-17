@@ -6,6 +6,8 @@ SDL_Renderer *__sdl_renderer = NULL;
 int SCREEN_WIDTH = 396;
 int SCREEN_HEIGHT = 224;
 
+long long int __pc_lastTime = 0;
+
 #ifdef DIST_WINDOWS
 void errx(int exitcode, const char *format, const char* error)
 {
@@ -32,6 +34,10 @@ void __PC_ResetDirectory()
 
 void PC_InitBase(int width, int height)
 {
+    #ifdef SIMU_DIST_CASIO_CG
+    width = 396*3;
+    height = 224*3;
+    #endif
     SCREEN_WIDTH = width;
     SCREEN_HEIGHT = height;
     // Initializes the SDL.
@@ -62,6 +68,7 @@ void PC_InitBase(int width, int height)
     // Dispatches the events.
     InputEvents = List_new();
     InputEventsHeld = List_new();
+    PC_InitAsset();
 }
 
 void PC_QuitBase()
@@ -86,6 +93,7 @@ void PC_QuitBase()
         free(List_pop(InputEventsHeld));
     List_free(InputEvents);
     List_free(InputEventsHeld);
+    PC_QuitAsset();
 }
 
 void PC_ClearScreen()
@@ -102,7 +110,12 @@ void PC_ClearScreenColor(PC_Color color)
 
 void PC_UpdateScreen()
 {
+    #ifdef SIMU_DIST_CASIO_CG
+    SDL_RenderSetScale(__sdl_renderer, 3, 3);
+    SDL_Delay(50);
+    #endif
     SDL_RenderPresent(__sdl_renderer);
+    __pc_lastTime = PC_GetTicks();
 }
 
 void PC_SelectScreen(int screen)
@@ -111,7 +124,62 @@ void PC_SelectScreen(int screen)
     (void)screen;
 }
 
-int PC_GetTicks()
+long long int PC_GetTicks()
 {
-    return SDL_GetTicks();
+    return SDL_GetTicks64();
+}
+
+long long int PC_DeltaTime()
+{
+    return PC_GetTicks() - __pc_lastTime;
+}
+
+long long int PC_FPS()
+{
+    long long int time = PC_DeltaTime();
+    long long int fps = LONG_MAX;
+    if (time != 0)
+        fps = fps / time;
+    return fps/1000;
+}
+
+void PC_Delay(long long int ms)
+{
+    SDL_Delay(ms);
+}
+
+void PC_ErrorScreen(const char* error)
+{
+    printf("\n%s\n", error);
+    if (MainFont!=NULL)
+    {
+        PC_IsKeyDownWait(SDLK_ESCAPE);
+        while (!PC_IsKeyDown(SDLK_ESCAPE))
+        {
+            PC_ClearScreen();
+            PC_UpdateInputs();
+            PC_DrawText((const unsigned char *)error, 0, 0, PC_ColorCreate(255, 255, 255, 255), MainFont);
+            PC_DrawText((const unsigned char *)"Press escape to exit", 0, 20, PC_ColorCreate(255, 255, 255, 255), MainFont);
+            PC_UpdateScreen();
+        }
+    }
+    errx(EXIT_FAILURE, "error %s", error);
+}
+
+void PC_DebugScreen(const char* str)
+{
+    printf("\n%s\n", str);
+    if (MainFont!=NULL)
+    {
+        PC_IsKeyDownWait(SDLK_SPACE);
+        while (!PC_IsKeyDown(SDLK_SPACE))
+        {
+            PC_ClearScreen();
+            PC_UpdateInputs();
+            PC_DrawText((const unsigned char *)str, 0, 0, PC_ColorCreate(255, 255, 255, 255), MainFont);
+            PC_DrawText((const unsigned char *)"Press space", 0, 20, PC_ColorCreate(255, 255, 255, 255), MainFont);
+            PC_UpdateScreen();
+        }
+    }
+    PC_IsKeyDownWait(SDLK_SPACE);
 }

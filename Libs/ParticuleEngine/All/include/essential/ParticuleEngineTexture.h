@@ -22,12 +22,10 @@ PC_Texture* PC_LoadTexture(const char* path);
 //path is a path to a file
 //returns a pointer to a PC_Texture struct
 
-PC_Texture* PC_LoadSubTextureSize(const char* path, int sx, int sy, int sw, int sh);
-//Loads a part of a texture from a file
-//path is a path to a file
-//sx and sy are the coordinates of the top left corner of the part of the texture to load
-//sw and sh are the width and height of the part of the texture to load
-
+PC_Texture* PC_CreateTexture(int width, int height);
+//creates a texture
+//width and height are the dimensions of the texture
+//returns a pointer to a PC_Texture struct
 
 void PC_FreeTexture(PC_Texture* texture);
 //frees the memory allocated for the texture

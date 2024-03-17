@@ -27,6 +27,16 @@ void PC_UpdateScreen();
 void PC_SelectScreen(int screen);
 //Selects the screen to draw on
 
-int PC_GetTicks();
+long long int PC_GetTicks();
+
+long long int PC_DeltaTime();
+
+long long int PC_FPS();
+
+void PC_Delay(long long int ms);
+
+void PC_ErrorScreen(const char* error);
+
+void PC_DebugScreen(const char* str);
 
 #endif

@@ -6,6 +6,7 @@
 #include "ParticuleEngineInput.h"
 #include "ParticuleEngineScreen.h"
 #include "ParticuleEngineTexture.h"
+#include "ParticuleEngineAsset.h"
 #include "../essential/ParticuleEngineEssential.h"
 
 #endif

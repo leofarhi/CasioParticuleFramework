@@ -26,13 +26,16 @@ build_path = JoinPath(base_path, "Build","build")
 bin_path = JoinPath(base_path, "Build","bin")
 
 def CreateDir(path):
+    if not os.path.exists(os.path.dirname(path)):
+        CreateDir(os.path.dirname(path))
     if not os.path.exists(path):
+        print("Creating dir: " + path)
         os.makedirs(path)
 
 def normalize_path(path):
     path = os.path.normpath(path)
     #replace \ by /
-    path = path.replace("\\","/")
+    path = path.replace("\\","/").replace("//","/")
     return path
 
 class SaveLoadSystem:
@@ -369,32 +372,7 @@ class DirectoryFile(Frame):
         Frame.destroy(self)
 
     def Save(self):
-        return bool(self.is_checked.get())
-    
-    def Load(self, value):
-        if type(value) == bool:
-            self.is_checked.set(int(value))
-        else:
-            self.is_checked.set(0)
-
-class DirectoryFileCombobox(Frame):
-    def __init__(self, root, path, values, *args, **kwargs):
-        Frame.__init__(self, root)
-        self.path = path
-        self.is_checked = IntVar()
-        self.checkbutton = Checkbutton(self, text=self.path, variable=self.is_checked)
-        self.checkbutton.grid(row=0, column=0, sticky=W)
-        
-        self.combobox = ttk.Combobox(self, state="readonly", values=tuple(values))
-        self.combobox.grid(row=0, column=1, sticky=W)
-
-    def destroy(self):
-        self.checkbutton.destroy()
-        Frame.destroy(self)
-
-    def Save(self):
-        data = {"is_checked": bool(self.is_checked.get()),
-                "combobox": str(self.combobox.get())}
+        data = {"is_checked": bool(self.is_checked.get())}
         return data
     
     def Load(self, value):
@@ -403,6 +381,27 @@ class DirectoryFileCombobox(Frame):
                 self.is_checked.set(int(value["is_checked"]))
             else:
                 self.is_checked.set(0)
+        else:
+            self.is_checked.set(0)
+
+class DirectoryFileCombobox(DirectoryFile):
+    def __init__(self, root, path, values, *args, **kwargs):
+        DirectoryFile.__init__(self, root, path, *args, **kwargs)     
+        self.combobox = ttk.Combobox(self, state="readonly", values=tuple(values), width=40)
+        self.combobox.grid(row=0, column=1, sticky=W)
+
+    def destroy(self):
+        self.checkbutton.destroy()
+        Frame.destroy(self)
+
+    def Save(self):
+        data = DirectoryFile.Save(self)
+        data["combobox"] = str(self.combobox.get())
+        return data
+    
+    def Load(self, value):
+        DirectoryFile.Load(self, value)
+        if type(value) == dict:
             if "combobox" in value:
                 self.combobox.set(value["combobox"])
             else:
@@ -411,12 +410,17 @@ class DirectoryFileCombobox(Frame):
             self.is_checked.set(0)
             self.combobox.set("")
 
+def IsSpriteFolder(path):
+    path_list = os.path.normpath(path).split(os.sep)
+    return True in [i[-len(".sprite"):]==".sprite" for i in path_list]
+
 class MyDirectoryFile(Frame):
-    def __init__(self, root, filetypes=None, directoryFileType = DirectoryFile, directoryFileArgs = {}, *args, **kwargs):
+    def __init__(self, root, filetypes=None, directoryFileType = DirectoryFile, directoryFileArgs = {}, path = base_path, *args, **kwargs):
         Frame.__init__(self, root)
         self.filetypes = filetypes
         self.directoryFileType = directoryFileType
         self.directoryFileArgs = directoryFileArgs
+        self.root_path = path
         self.path = MyEntry(self, "Directory")
         self.path.pack(side=TOP, fill=X)
         self.path.entry.bind("<Return>", self.UpdateDir)
@@ -432,6 +436,10 @@ class MyDirectoryFile(Frame):
         self.CheckButtons = []
         self.UpdateDir()
 
+    def SetRootPath(self, path):
+        self.root_path = path
+        self.UpdateDir()
+
     def UpdateDir(self,Saveload = True, *args, **kwargs):
         if Saveload:
             data = self.Save()
@@ -439,7 +447,7 @@ class MyDirectoryFile(Frame):
             i.destroy()
         self.CheckButtons = []
         path = self.path.get()
-        path = os.path.join(base_path, path)
+        path = os.path.join(self.root_path, path)
         if path == None or path == "":
             return
         #check if path is a directory
@@ -449,12 +457,12 @@ class MyDirectoryFile(Frame):
         for root, dirs, files in os.walk(path):
             if root in self.files:
                 continue
-            if False:#IsSpriteFolder(root):
-                self.files.append(root)
+            if IsSpriteFolder(root):
+                self.files.append(normalize_path(os.path.relpath(root, path)))
             else:
                 for file in files:
                     if self.filetypes == None or os.path.splitext(file)[1].lower() in self.filetypes:
-                        p = os.path.relpath(os.path.join(root, file), path)
+                        p = normalize_path(os.path.relpath(os.path.join(root, file), path))
                         self.files.append(p)
         for ind, file in enumerate(self.files):
             checkFile = self.directoryFileType(self.frame, file, **self.directoryFileArgs)
@@ -482,6 +490,13 @@ class MyDirectoryFile(Frame):
                         if os.path.normpath(i.path) == os.path.normpath(file):
                             i.Load(data)
                             break
+
+    def GetFiles(self):
+        files = {}
+        for i in self.CheckButtons:
+            if bool(i.is_checked.get()):
+                files[JoinPath(self.root_path, self.path.get(), i.path)] = i.Save()
+        return files
 
 class MyScrollFrame(Frame):
     def __init__(self, root, *args, **kwargs):

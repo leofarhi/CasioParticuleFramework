@@ -1,0 +1,5 @@
+UI.png:
+  name: IMG_ASSET_93c169d2c52347e8a1c4d54c579f5434
+  type: bopti-image
+  profile: p8
+

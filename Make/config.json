@@ -3,9 +3,10 @@
         "Datas": {
             "default": {
                 "General.DebugVersion": true,
-                "General.AppName": "Enigne",
+                "General.AppName": "Engine",
                 "General.AppVersion": "",
                 "General.AppAuthor": "",
+                "General.AssetFolderName": "DATA",
                 "Libs": {
                     "Libs/Essential": {
                         "Check": true,
@@ -14,34 +15,22 @@
                         "Selection.Tuple": true
                     },
                     "Libs/ParticuleEngine": {
-                        "Check": false,
-                        "Selection.<built-in function dir>": false
+                        "Check": true,
+                        "Selection.Engine": false,
+                        "Selection.Essential": true
                     }
                 },
                 "Make.MakeCmd": "wsl -e bash -lic \"fxsdk build-cg -c -B $(BUILD);make -C $(BUILD)\"",
+                "Assets.Path": "Assets/assets-cg",
                 "Assets.Textures": {
-                    "path": "",
+                    "path": "Images",
                     "files": [
                         [
                             {
-                                "is_checked": false,
-                                "combobox": ""
+                                "is_checked": true,
+                                "combobox": "External_bopti-image_p4_rgb565a"
                             },
-                            "Assets\\assets-cg\\icon-sel.png"
-                        ],
-                        [
-                            {
-                                "is_checked": false,
-                                "combobox": ""
-                            },
-                            "Assets\\assets-cg\\icon-uns.png"
-                        ],
-                        [
-                            {
-                                "is_checked": false,
-                                "combobox": ""
-                            },
-                            "Assets\\assets-cg\\icon.png"
+                            "UI.png"
                         ]
                     ]
                 }
@@ -66,28 +55,52 @@
                     },
                     "Libs/ParticuleEngine": {
                         "Check": true,
-                        "Selection.<built-in function dir>": true
+                        "Selection.Engine": false,
+                        "Selection.Essential": false
                     }
                 },
                 "Make.RunCmd": "wsl \"./$(General.AppName)\"",
                 "Make.CleanCmd": "make clean",
                 "Make.MakeCmd": "wsl \"make\"",
+                "Assets.Path": "",
                 "Assets.Textures": {
                     "path": "",
                     "files": [
                         [
-                            false,
-                            "Assets\\assets-cg\\icon-sel.png"
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-cg/icon-sel.png"
                         ],
                         [
-                            false,
-                            "Assets\\assets-cg\\icon-uns.png"
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-cg/icon-uns.png"
                         ],
                         [
-                            false,
-                            "Assets\\assets-cg\\icon.png"
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-cg/icon.png"
+                        ],
+                        [
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-cg/Images/UI.png"
+                        ],
+                        [
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-win/Images/UI.png"
                         ]
                     ]
+                },
+                "Assets.Fonts": {
+                    "path": "Fonts",
+                    "files": []
                 }
             }
         },
@@ -110,26 +123,33 @@
                     },
                     "Libs/ParticuleEngine": {
                         "Check": true,
-                        "Selection.<built-in function dir>": true
+                        "Selection.Engine": false,
+                        "Selection.Essential": true
                     }
                 },
                 "Make.RunCmd": "$(General.AppName).exe",
                 "Make.CleanCmd": "make clean",
                 "Make.MakeCmd": "make",
+                "Assets.Path": "Assets/assets-win",
                 "Assets.Textures": {
-                    "path": "",
+                    "path": "Images",
                     "files": [
                         [
-                            false,
-                            "Assets\\assets-cg\\icon-sel.png"
-                        ],
+                            {
+                                "is_checked": true
+                            },
+                            "UI.png"
+                        ]
+                    ]
+                },
+                "Assets.Fonts": {
+                    "path": "Fonts",
+                    "files": [
                         [
-                            false,
-                            "Assets\\assets-cg\\icon-uns.png"
-                        ],
-                        [
-                            false,
-                            "Assets\\assets-cg\\icon.png"
+                            {
+                                "is_checked": true
+                            },
+                            "Calibri.ttf"
                         ]
                     ]
                 }

@@ -28,6 +28,7 @@ class BaseDistribution(Frame):
         self.OnAddMakeTab()
         self.OnAddBottomButton()
         self.OnAddAssetsTab()
+        self.OnUpdateAssetsDir()
 
     def ReplaceVars(self, cmd):
         self.UpdateInfos()
@@ -65,12 +66,40 @@ class BaseDistribution(Frame):
     
     def OnAddAssetsTab(self):
         self.TabAssets = self.AddTab("Assets")
+
+        self.TabAssets.path_asset = MyEntry(self.TabAssets, self.NAME+" Asset Directory")
+        self.TabAssets.path_asset.set("Assets/assets-")
+        self.TabAssets.path_asset.pack(side=TOP, fill=X)
+        self.TabAssets.path_asset.entry.bind("<Return>", self.OnUpdateAssetsDir)
+        self.SaveLoadSystem.Add("Assets.Path", self.TabAssets.path_asset)
+
         self.TabAssets.tabs = ttk.Notebook(self.TabAssets)
         self.TabAssets.tabs.pack(side=TOP, fill=BOTH, expand=1)
-        self.TabAssets.tabs.Textures = self.AddTab("Textures", self.TabAssets.tabs)
-        self.TabAssets.tabs.Textures.DirectoryFile = MyDirectoryFile(self.TabAssets.tabs.Textures, filetypes=[".png",".jpg",".jpeg",".bmp"])
-        self.TabAssets.tabs.Textures.DirectoryFile.pack(side=TOP, fill=BOTH, expand=1)
-        self.SaveLoadSystem.Add("Assets.Textures", self.TabAssets.tabs.Textures.DirectoryFile)
+        self.TabAssets.tabs.sections = {}
+
+        self.AddAssetsSubtab("Textures", filetypes=[".png",".jpg",".jpeg",".bmp"], default_path="Images")
+
+    def AddAssetsSubtab(self, name, filetypes=None, default_path=""):
+        tab = self.AddTab(name, self.TabAssets.tabs)
+        tab.DirectoryFile = MyDirectoryFile(tab, filetypes=filetypes)
+        tab.DirectoryFile.path.set(default_path)
+        tab.DirectoryFile.pack(side=TOP, fill=BOTH, expand=1)
+        self.SaveLoadSystem.Add("Assets."+name, tab.DirectoryFile)
+        self.TabAssets.tabs.sections[name] = tab
+
+    def OnUpdateAssetsDir(self, *args, **kwargs):
+        path = base_path
+        if self.TabAssets.path_asset.get() != "":
+            path = JoinPath(path,self.TabAssets.path_asset.get())
+        for key in self.TabAssets.tabs.sections:
+            self.TabAssets.tabs.sections[key].DirectoryFile.SetRootPath(path)
+
+    def GetAllAssets(self):
+        self.OnUpdateAssetsDir()
+        assets = {}
+        for key in self.TabAssets.tabs.sections:
+            assets[key] = self.SaveLoadSystem.Get("Assets."+key).GetFiles()
+        return assets
 
     def OnAddLibsTab(self):
         self.TabLibs = self.AddTab("Libs")
@@ -89,23 +118,60 @@ class BaseDistribution(Frame):
 
     def OnCloneMakefile(self, clone):
         return clone
+    
+    def OnMakeAssets(self):
+        self.TabLibs.Libs.OnEventCallback("OnMakeAssets")
+        bin_path = JoinPath(base_path, "Build", "bin")
+        asset_path = JoinPath(base_path, self.SaveLoadSystem.Get("Assets.Path").get())
+        image_path = JoinPath(asset_path, self.TabAssets.tabs.sections["Textures"].DirectoryFile.path.get())
+        AllAssets = self.GetAllAssets()
+        images = AllAssets["Textures"]
+        CreateDir(JoinPath(bin_path, "assets"))
+        bin_img_path = JoinPath(bin_path, "assets", "Images")
+        CreateDir(bin_img_path)
+        for file in images:
+            desti = normalize_path(JoinPath(bin_img_path, os.path.relpath(file, image_path)))
+            if IsSpriteFolder(file):
+                CreateDir(os.path.dirname(desti))
+                if os.path.exists(desti):
+                    shutil.rmtree(desti)
+                shutil.copytree(file, desti)
+            else:
+                CreateDir(os.path.dirname(desti))
+                shutil.copyfile(file, desti)
+        return AllAssets
+    
+    def CopyAssetsInBuild(self, AllAssets, section_name):
+        bin_path = JoinPath(base_path, "Build", "bin")
+        asset_path = JoinPath(base_path, self.SaveLoadSystem.Get("Assets.Path").get())
+        section_path = JoinPath(asset_path, self.TabAssets.tabs.sections[section_name].DirectoryFile.path.get())
+        section = AllAssets[section_name]
+        bin_section_path = JoinPath(bin_path, "assets", section_name)
+        CreateDir(bin_section_path)
+        for file in section:
+            desti = normalize_path(JoinPath(bin_section_path, os.path.relpath(file, section_path)))
+            CreateDir(os.path.dirname(desti))
+            shutil.copyfile(file, desti)
 
     def OnMake(self):
+        self.TabLibs.Libs.OnEventCallback("OnMake")
+        self.Makefile.TITLE = self.SaveLoadSystem.Get("General.AppName").get()
+        self.Makefile.DEBUG = bool(self.SaveLoadSystem.Get("General.DebugVersion").get())
         clone = self.Makefile.Clone()
-        clone.TITLE = self.SaveLoadSystem.Get("General.AppName").get()
-        clone.DEBUG = bool(self.SaveLoadSystem.Get("General.DebugVersion").get())
         clone.libs += self.GetIncludesDir()
         clone.sources += self.GetIncludesDir()
+        clone.defines.append("PROJECT_NAME="+str(clone.TITLE))
         clone = self.OnCloneMakefile(clone)
+        self.TabLibs.Libs.OnEventCallback("OnCloneMakefile", clone)
         clone.Write()
         clone.MakeFolders()
-        self.TabLibs.Libs.OnBuild()
+        self.TabLibs.Libs.OnEventCallback("OnBuild")
 
     def OnClean(self):
-        pass
+        self.TabLibs.Libs.OnEventCallback("OnClean")
 
     def OnRun(self):
-        pass
+        self.TabLibs.Libs.OnEventCallback("OnRun")
 
     def Clean(self):
         print("Cleaning")
@@ -121,6 +187,8 @@ class BaseDistribution(Frame):
 
     def Build(self):
         print("Building")
+        self.OnMakeAssets()
+        self.TabLibs.Libs.OnEventCallback("OnMakeAssetsAfter")
         self.OnMake()
         cmdString = self.ReplaceVars(self.SaveLoadSystem.Get("Make.MakeCmd").get())
         subprocess.call(cmdString, shell=True, cwd=os.path.dirname(self.Makefile.filename))
@@ -171,6 +239,7 @@ class BaseDistribution(Frame):
         if data is None:
             data = {}
         self.SaveLoadSystem.Load(data)
+        self.OnUpdateAssetsDir()
     
     def AfterLoad(self):
         pass

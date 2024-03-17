@@ -11,6 +11,7 @@ class Includes(BaseIncludes):
         self.distrib_dirs = {
             "Windows": "WindowsLinux",
             "Linux": "WindowsLinux",
+            "Casio CG": "CasioCg",
         }
 
     def Frame(self, root, distribution,*args, **kwargs):
@@ -23,7 +24,7 @@ class Includes(BaseIncludes):
             chk.value = self.dirs[sublib]
             chk.pack()
             frame.Selection.lst.append(chk)
-            frame.SaveLoadSystem.Add(f"Selection.{dir}", chk)
+            frame.SaveLoadSystem.Add(f"Selection.{sublib}", chk)
         return frame
 
     def GetIncludesDir(self, node, distribution):

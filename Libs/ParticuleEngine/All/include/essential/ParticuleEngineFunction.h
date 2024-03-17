@@ -18,4 +18,7 @@
 #define int_to_ptr(a) ((void*)(size_t)(a))
 #define ptr_to_int(a) ((int)(size_t)(a))
 
+void PC_toLower(char** str);
+void PC_toUpper(char** str);
+
 #endif
