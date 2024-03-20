@@ -18,6 +18,9 @@
         "mykeyboard.h": "c",
         "string.h": "c",
         "list.h": "c",
-        "particuleengine.h": "c"
+        "particuleengine.h": "c",
+        "image.h": "c",
+        "callbacks.h": "c",
+        "common-sce.h": "c"
     },
 }

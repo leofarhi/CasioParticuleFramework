@@ -64,18 +64,6 @@ void PC_UpdateInputs(){
     }
 }
 
-int PC_GetInputEvent()
-{
-    if (InputEvents->size > 0)
-    {
-        SDL_Event* event = List_pop(InputEvents);
-        int key = event->key.keysym.sym;
-        free(event);
-        return key;
-    }
-    return -1;
-}
-
 bool PC_IsKeyPressed(int key)
 {
     for (List_node*cur=NULL; ForEach(InputEventsHeld,&cur);)

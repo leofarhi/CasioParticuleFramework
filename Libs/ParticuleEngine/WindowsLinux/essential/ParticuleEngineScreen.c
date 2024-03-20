@@ -35,8 +35,11 @@ void __PC_ResetDirectory()
 void PC_InitBase(int width, int height)
 {
     #ifdef SIMU_DIST_CASIO_CG
-    width = 396*3;
-    height = 224*3;
+    width = 396*2;
+    height = 224*2;
+    #elif defined(SIMU_DIST_PSP)
+    width = 480*2;
+    height = 272*2;
     #endif
     SCREEN_WIDTH = width;
     SCREEN_HEIGHT = height;
@@ -110,8 +113,8 @@ void PC_ClearScreenColor(PC_Color color)
 
 void PC_UpdateScreen()
 {
-    #ifdef SIMU_DIST_CASIO_CG
-    SDL_RenderSetScale(__sdl_renderer, 3, 3);
+    #if defined(SIMU_DIST_CASIO_CG) || defined(SIMU_DIST_PSP)
+    SDL_RenderSetScale(__sdl_renderer, 2, 2);
     SDL_Delay(50);
     #endif
     SDL_RenderPresent(__sdl_renderer);

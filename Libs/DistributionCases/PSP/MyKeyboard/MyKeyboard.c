@@ -6,9 +6,10 @@
 #include <pspgu.h>
 #include <string.h>
 #include <psputility.h>
+#include <stdlib.h>
 
-#include "Libs/PSP/common/callbacks.h"
-#include "Libs/PSP/common/common-sce.h"
+#include <common/callbacks.h>
+#include <common/common-sce.h>
 
 
 

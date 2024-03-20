@@ -162,6 +162,8 @@ def GetAllSubFolders(root):
         folder = queue.pop(0)
         folders.append(folder)
         for file in os.listdir(folder):
+            if file.startswith("~"):
+                continue
             if os.path.isdir(os.path.join(folder, file)):
                 queue.append(os.path.join(folder, file))
     return folders
@@ -170,6 +172,8 @@ def GetAllFilesInSubFolders(srcFolder, filetypes = []):
     listFiles = []
     for root, dirs, files in os.walk(srcFolder):
         for file in files:
+            if file.startswith("~"):
+                continue
             if True in [bool(file.endswith(ext)) for ext in filetypes]:
                 listFiles.append(os.path.join(root, file))
     return listFiles

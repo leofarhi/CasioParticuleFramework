@@ -6,18 +6,19 @@
 int main(void)
 {
     PC_InitBase(800, 600);
+    int key, key2;
+    #ifdef DIST_WINDOWS
     PC_SetMainFont(PC_LoadFont("assets/Fonts/Calibri.ttf", 16));
-    int key;
-    #ifdef DIST_WINDOWS
     key = SDLK_a;
-    #elif defined DIST_CASIO_CG
-    key = KEY_MENU;
-    #endif
-    int key2;
-    #ifdef DIST_WINDOWS
     key2 = SDLK_b;
     #elif defined DIST_CASIO_CG
+    PC_SetMainFont(PC_LoadFont(" ", 16));
+    key = KEY_MENU;
     key2 = KEY_EXE;
+    #elif defined DIST_PSP
+    PC_SetMainFont(PC_LoadFont("assets/Fonts/Font.png", 16));
+    key = PSP_CTRL_START;
+    key2 = PSP_CTRL_CROSS;
     #endif
     while (!PC_IsKeyDown(key))
     {
@@ -58,6 +59,9 @@ int main(void)
         PC_DrawText((const unsigned char *)str2, 0, 180, PC_ColorCreate(255, 255, 255, 255),MainFont);
         sprintf(str2, "Mouse position: %d, %d", MousePosition.x, MousePosition.y);
         PC_DrawText((const unsigned char *)str2, 0, 200, PC_ColorCreate(255, 255, 255, 255),MainFont);
+        Vector2 analog = PC_InputAnalog(0);
+        sprintf(str2, "Analog position: %d, %d", (int)analog.x, (int)analog.y);
+        PC_DrawText((const unsigned char *)str2, 200, 200, PC_ColorCreate(255, 255, 255, 255),MainFont);
         PC_UpdateScreen();
     }
     PC_IsKeyDownWait(key);

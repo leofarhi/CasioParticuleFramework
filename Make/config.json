@@ -94,6 +94,18 @@
                             {
                                 "is_checked": false
                             },
+                            "Assets/assets-psp/Fonts/Font.png"
+                        ],
+                        [
+                            {
+                                "is_checked": false
+                            },
+                            "Assets/assets-psp/Images/UI.png"
+                        ],
+                        [
+                            {
+                                "is_checked": false
+                            },
                             "Assets/assets-win/Images/UI.png"
                         ]
                     ]
@@ -106,6 +118,57 @@
         },
         "current": "default"
     },
+    "PSP": {
+        "Datas": {
+            "default": {
+                "General.DebugVersion": true,
+                "General.AppName": "Engine",
+                "General.AppVersion": "",
+                "General.AppAuthor": "",
+                "Libs": {
+                    "Libs/Essential": {
+                        "Check": true,
+                        "Selection.Dict": true,
+                        "Selection.List": true,
+                        "Selection.Tuple": true
+                    },
+                    "Libs/ParticuleEngine": {
+                        "Check": true,
+                        "Selection.Engine": false,
+                        "Selection.Essential": true
+                    }
+                },
+                "Make.RunCmd": "C:/Users/leofa/OneDrive/Bureau/ChillCasioJam2023/MultiPlateformEngine/Emu/ppsspp-g/ppssppwindows.exe",
+                "Make.CleanCmd": "make clean",
+                "Make.MakeCmd": "make",
+                "Assets.Path": "Assets/assets-psp",
+                "Assets.Textures": {
+                    "path": "Images",
+                    "files": [
+                        [
+                            {
+                                "is_checked": true,
+                                "combobox": "rgb565a"
+                            },
+                            "UI.png"
+                        ]
+                    ]
+                },
+                "Assets.Fonts": {
+                    "path": "Fonts",
+                    "files": [
+                        [
+                            {
+                                "is_checked": true
+                            },
+                            "Font.png"
+                        ]
+                    ]
+                }
+            }
+        },
+        "current": "default"
+    },
     "Windows": {
         "Datas": {
             "default": {
@@ -113,7 +176,7 @@
                 "General.AppName": "Engine",
                 "General.AppVersion": "",
                 "General.AppAuthor": "",
-                "TabGeneral.Simulator": "Casio CG",
+                "TabGeneral.Simulator": "PSP",
                 "Libs": {
                     "Libs/Essential": {
                         "Check": true,
@@ -136,7 +199,7 @@
                     "files": [
                         [
                             {
-                                "is_checked": true
+                                "is_checked": false
                             },
                             "UI.png"
                         ]
@@ -147,7 +210,7 @@
                     "files": [
                         [
                             {
-                                "is_checked": true
+                                "is_checked": false
                             },
                             "Calibri.ttf"
                         ]
@@ -158,6 +221,6 @@
         "current": "default"
     },
     "SaveLoadSystem": {
-        "MenuDistributions": "Windows"
+        "MenuDistributions": "PSP"
     }
 }

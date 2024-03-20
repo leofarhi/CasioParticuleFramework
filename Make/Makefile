@@ -27,7 +27,7 @@ LIBS_DIR = ../Libs
 #/*</LIBS_DIR_FIELD>*/
 
 #/*<SOURCE_DIR_FIELD>*/
-SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/Essential/Dict ../Libs/Essential/List ../Libs/Essential/Tuple ../Libs/ParticuleEngine/WindowsLinux/essential ../Libs/ParticuleEngine/All/include/essential ../Libs/ParticuleEngine/All/src/essential
+SourceDirs += ../Sources ../Sources/include ../Sources/src ../Libs/DistributionCases/PSP ../Libs/DistributionCases/PSP/common ../Libs/DistributionCases/PSP/MyKeyboard ../Libs/Essential/Dict ../Libs/Essential/List ../Libs/Essential/Tuple ../Libs/ParticuleEngine/Psp/essential ../Libs/ParticuleEngine/All/include/essential ../Libs/ParticuleEngine/All/src/essential
 #/*</SOURCE_DIR_FIELD>*/
 
 #print all folder in SourceDirs
@@ -43,15 +43,15 @@ PRG += ${SRC:.c=}
 
 
 #/*<INCLUDE_MAKEFILE>*/
-include Distributions/Windows/Makefile
+include Distributions/PSP/Makefile
 #/*</INCLUDE_MAKEFILE>*/
 
 #/*<CFLAGS_AND_LDLIBS_FIELD>*/
-CFLAGS += -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple -I ../Libs/ParticuleEngine/WindowsLinux/essential -I ../Libs/ParticuleEngine/All/include/essential -I ../Libs/ParticuleEngine/All/src/essential 
+CFLAGS += -I ../Libs/DistributionCases/PSP -I ../Libs/Essential/Dict -I ../Libs/Essential/List -I ../Libs/Essential/Tuple -I ../Libs/ParticuleEngine/Psp/essential -I ../Libs/ParticuleEngine/All/include/essential -I ../Libs/ParticuleEngine/All/src/essential 
 
-CFLAGS += -DDIST_WINDOWS -DPROJECT_NAME=Engine -DSIMU_DIST_CASIO_CG
+CFLAGS += -DDIST_PSP -DPROJECT_NAME=\"Engine\"
 
-LDLIBS += -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple -L ../Libs/ParticuleEngine/WindowsLinux/essential -L ../Libs/ParticuleEngine/All/include/essential -L ../Libs/ParticuleEngine/All/src/essential 
+LDLIBS += -L ../Libs/DistributionCases/PSP -L ../Libs/Essential/Dict -L ../Libs/Essential/List -L ../Libs/Essential/Tuple -L ../Libs/ParticuleEngine/Psp/essential -L ../Libs/ParticuleEngine/All/include/essential -L ../Libs/ParticuleEngine/All/src/essential 
 #/*</CFLAGS_AND_LDLIBS_FIELD>*/
 
 #/*<DEBUG_FIELD>*/

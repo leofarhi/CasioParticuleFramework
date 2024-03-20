@@ -167,12 +167,33 @@ FX_CHARSETS = {
 # Conversion mechanisms
 #
 
-def u8(x):
+def u8be(x):
     return bytes([ x & 255 ])
-def u16(x):
+def u16be(x):
     return bytes([ (x >> 8) & 255, x & 255 ])
-def u32(x):
+def u32be(x):
     return bytes([ (x >> 24) & 255, (x >> 16) & 255, (x >> 8) & 255, x & 255 ])
+
+#little-endian
+def u32le(x):
+	return bytes([ x & 255, (x >> 8) & 255, (x >> 16) & 255, (x >> 24) & 255 ])
+
+def u16le(x):
+	return bytes([ x & 255, (x >> 8) & 255 ])
+
+def u8le(x):
+	return bytes([ x & 255 ])
+
+def Endian(endian):
+	global u8, u16, u32
+	if endian == ">":
+		u8 = u8be
+		u16 = u16be
+		u32 = u32be
+	elif endian == "<":
+		u8 = u8le
+		u16 = u16le
+		u32 = u32le
 
 def ref(base, offset=None, padding=None, prefix_underscore=True):
 	if isinstance(base, bytes) or isinstance(base, bytearray):

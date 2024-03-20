@@ -12,6 +12,7 @@ class Includes(BaseIncludes):
             "Windows": "WindowsLinux",
             "Linux": "WindowsLinux",
             "Casio CG": "CasioCg",
+            "PSP": "Psp",
         }
 
     def Frame(self, root, distribution,*args, **kwargs):

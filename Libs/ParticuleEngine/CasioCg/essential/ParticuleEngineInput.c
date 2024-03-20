@@ -20,18 +20,6 @@ void PC_UpdateInputs()
     }
 }
 
-int PC_GetInputEvent()
-{
-    if (InputEvents->size > 0)
-    {
-        PC_GINT_keyinfo* event = List_pop(InputEvents);
-        int key = event->key;
-        free(event);
-        return key;
-    }
-    return -1;
-}
-
 bool PC_IsKeyPressed(int key)
 {
     return keydown(key);

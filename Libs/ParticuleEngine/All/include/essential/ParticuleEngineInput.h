@@ -7,9 +7,6 @@ extern Vector2 MousePosition;
 void PC_UpdateInputs();
 //Updates the inputs
 
-int PC_GetInputEvent();
-//Returns the first input event in the list
-
 bool PC_IsKeyPressed(int key);
 //Checks if a key is pressed (Holding down)
 //key is the key to check
@@ -33,6 +30,7 @@ bool PC_IsMouseButtonUp(int button);
 //Checks if a mouse button is up (Released)
 
 Vector2 PC_InputAnalog(int stick);
+//Value between -127 and 128
 
 bool PC_MouseOver(int x, int y, int w, int h);
 

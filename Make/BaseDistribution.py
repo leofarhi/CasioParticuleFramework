@@ -160,7 +160,7 @@ class BaseDistribution(Frame):
         clone = self.Makefile.Clone()
         clone.libs += self.GetIncludesDir()
         clone.sources += self.GetIncludesDir()
-        clone.defines.append("PROJECT_NAME="+str(clone.TITLE))
+        clone.defines.append("PROJECT_NAME=\\\""+str(clone.TITLE)+"\\\"")
         clone = self.OnCloneMakefile(clone)
         self.TabLibs.Libs.OnEventCallback("OnCloneMakefile", clone)
         clone.Write()

@@ -447,7 +447,8 @@ PC_Color PC_GetPixelColor(PC_Texture* texture, int x, int y)
 
 void PC_SetPixelColor(PC_Texture* texture, int x, int y, PC_Color color)
 {
-    texture->SetPixel(texture, x, y, color.color);
+    PC_ErrorScreen("Error: SetPixelColor not implemented");
+    //texture->SetPixel(texture, x, y, color.color);
 }
 
 PC_Texture* PC_LoadTextureSprite(const char* path,int index)
